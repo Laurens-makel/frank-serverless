@@ -39,22 +39,4 @@ public abstract class AwsBaseAdapter<REQ,REP> extends ServerlessAdapter implemen
     }
 
 
-    // generic way of calling a pipeline and translating it to AWS specific objects
-    protected REP handleMessage(Message request, PipeLineSession session) {
-        try {
-            PipeLineResult result = process(session.getMessageId(), request, session);
-            return extractResult(request, result, session);
-        } catch (PipeRunException e) {
-            return extractErrorResult(request, e, session);
-        } catch (Exception e) {
-            throw new RuntimeException("Could not extract result...", e);
-        }
-    };
-
-    // translate framework results to AWS results
-    abstract protected REP extractResult(Message request, PipeLineResult result, PipeLineSession session) throws Exception;
-
-    // translate framework errors to AWS errors
-    abstract protected REP extractErrorResult(Message request, PipeRunException e, PipeLineSession session);
-
 }

@@ -14,7 +14,7 @@ import org.example.frank.serverless.aws.AwsBatchAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class SqsAdapter extends AwsBatchAdapter<SQSEvent, SQSBatchResponse, SQSEvent.SQSMessage> {
+public abstract class SqsAdapter extends AwsBatchAdapter<SQSEvent, SQSBatchResponse, SQSEvent.SQSMessage, Void> {
     protected boolean isBatchItemFailureAllowed;
     private final String FAILURES_SESSION_KEY = "BatchItemFailures";
 
@@ -45,7 +45,7 @@ public abstract class SqsAdapter extends AwsBatchAdapter<SQSEvent, SQSBatchRespo
     }
 
     @Override
-    protected SQSBatchResponse handleMessage(Message request, PipeLineSession session) {
+    protected Void handleMessage(Message request, PipeLineSession session) {
         try {
             process(session.getMessageId(), request, session);
         } catch (PipeRunException e) {
@@ -80,12 +80,12 @@ public abstract class SqsAdapter extends AwsBatchAdapter<SQSEvent, SQSBatchRespo
     }
 
     @Override
-    protected SQSBatchResponse extractResult(Message request, PipeLineResult result, PipeLineSession session) {
-        return getBatchResult(getBatchSession(session));
+    protected Void extractResult(Message request, PipeLineResult result, PipeLineSession session) {
+        return null;
     }
 
     @Override
-    protected SQSBatchResponse extractErrorResult(Message request, PipeRunException e, PipeLineSession session) {
-        return getBatchResult(getBatchSession(session));
+    protected Void extractErrorResult(Message request, PipeRunException e, PipeLineSession session) {
+        return null;
     }
 }
