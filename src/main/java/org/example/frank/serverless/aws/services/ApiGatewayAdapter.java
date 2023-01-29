@@ -21,8 +21,7 @@ public abstract class ApiGatewayAdapter extends AwsAdapter<APIGatewayProxyReques
 
     @Override
     protected APIGatewayProxyResponseEvent extractResult(Message request, PipeLineResult result, PipeLineSession session) throws Exception {
-        APIGatewayProxyResponseEvent response = (APIGatewayProxyResponseEvent) request
-                .getContext().get(PipeLineSession.HTTP_RESPONSE_KEY);
+        APIGatewayProxyResponseEvent response = (APIGatewayProxyResponseEvent) request.getContext().get(PipeLineSession.HTTP_RESPONSE_KEY);
 
         return response
                 .withStatusCode(result.getExitCode())
@@ -31,8 +30,7 @@ public abstract class ApiGatewayAdapter extends AwsAdapter<APIGatewayProxyReques
 
     @Override
     protected APIGatewayProxyResponseEvent extractErrorResult(Message request, PipeRunException e, PipeLineSession session) {
-        APIGatewayProxyResponseEvent response = (APIGatewayProxyResponseEvent) request
-                .getContext().get(PipeLineSession.HTTP_RESPONSE_KEY);
+        APIGatewayProxyResponseEvent response = (APIGatewayProxyResponseEvent) request.getContext().get(PipeLineSession.HTTP_RESPONSE_KEY);
 
         return response
                 .withStatusCode(500)
@@ -44,7 +42,7 @@ public abstract class ApiGatewayAdapter extends AwsAdapter<APIGatewayProxyReques
         APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
 
         Map<String, Object> messageContext = request.getContext();
-        messageContext.put(PipeLineSession.HTTP_REQUEST_KEY, event);
+        messageContext.put(PipeLineSession.HTTP_REQUEST_KEY,  event);
         messageContext.put(PipeLineSession.HTTP_RESPONSE_KEY, response);
 
         for (Map.Entry<String, String> header : event.getHeaders().entrySet()) {
