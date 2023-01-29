@@ -22,16 +22,4 @@ public class GetMembers extends ApiGatewayAdapter {
         pipeLine.addPipe(new ServerlessAdapterSenderPipe("Send members", "SubAdapter"));
     }
 
-    public static class CreateMembersFromSQS extends SqsAdapter {
-
-        public CreateMembersFromSQS() throws ConfigurationException, PipeStartException {
-            super("CreateMembersFromSQS");
-        }
-
-        @Override
-        protected void createPipeline(PipeLine pipeLine) throws ConfigurationException {
-
-        }
-
-    }
 }

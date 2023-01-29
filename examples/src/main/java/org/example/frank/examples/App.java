@@ -1,4 +1,4 @@
-package org.example.frank;
+package org.example.frank.examples;
 
 import nl.nn.adapterframework.configuration.ConfigurationException;
 import nl.nn.adapterframework.core.*;
