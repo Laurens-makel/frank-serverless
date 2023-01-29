@@ -5,16 +5,17 @@ import nl.nn.adapterframework.core.*;
 import nl.nn.adapterframework.stream.Message;
 import org.example.frank.examples.adapters.TestAdapter;
 import org.example.frank.serverless.ServerlessAdapter;
+import org.example.frank.serverless.aws.services.TestAwsAdapter;
 
 import java.io.IOException;
 
 public class App {
-    private static ServerlessAdapter adapter;
+    private static TestAwsAdapter adapter;
 
     public static void main(String[] args) throws ConfigurationException, IOException, PipeRunException, PipeStartException {
         long start = System.currentTimeMillis();
 
-        adapter = new TestAdapter("Test run");
+        adapter = new TestAwsAdapter();
         finish(start, "Time Elapsed Before Startup:");
 
         sendMessage(new Message("Hello world 1"));
@@ -28,8 +29,8 @@ public class App {
 
         PipeLineSession session = new PipeLineSession();
         session.put("name", "John Doe");
-        PipeLineResult result = adapter.process("",request, session);
-        System.out.println("Result: " + result.getResult().asString());
+        String result = adapter.handleRequest("echo",null);
+        System.out.println("Result: " + result);
         finish(start, "Time Elapsed for single message:");
     }
 

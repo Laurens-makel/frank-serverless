@@ -27,16 +27,34 @@ public abstract class AwsBaseAdapter<REQ,REP> extends ServerlessAdapter implemen
     protected PipeLineSession createPipelineSession(Context context){
         PipeLineSession session = new PipeLineSession();
 
-        session.put(PipeLineSession.messageIdKey,    context.getAwsRequestId());
-        session.put(LAMBDA_CLIENT_CONTEXT_KEY,       context.getClientContext());
-        session.put(LAMBDA_FUNCTION_NAME_KEY,        context.getFunctionName());
-        session.put(LAMBDA_FUNCTION_VERSION_KEY,     context.getFunctionVersion());
-        session.put(LAMBDA_IDENTITY_KEY,             context.getIdentity());
-        session.put(LAMBDA_INVOKED_FUNCTION_ARN_KEY, context.getInvokedFunctionArn());
-        session.put(LAMBDA_LOGGER_KEY,               context.getLogger());
+        if(context != null){
+            session.put(PipeLineSession.messageIdKey,    context.getAwsRequestId());
+            session.put(LAMBDA_CLIENT_CONTEXT_KEY,       context.getClientContext());
+            session.put(LAMBDA_FUNCTION_NAME_KEY,        context.getFunctionName());
+            session.put(LAMBDA_FUNCTION_VERSION_KEY,     context.getFunctionVersion());
+            session.put(LAMBDA_IDENTITY_KEY,             context.getIdentity());
+            session.put(LAMBDA_INVOKED_FUNCTION_ARN_KEY, context.getInvokedFunctionArn());
+            session.put(LAMBDA_LOGGER_KEY,               context.getLogger());
+        }
 
         return session;
     }
 
+    // generic way of calling a pipeline and translating it to AWS specific objects
+    protected Object handleMessage(Message request, PipeLineSession session) {
+        try {
+            PipeLineResult result = process(session.getMessageId(), request, session);
+            return extractResult(request, result, session);
+        } catch (PipeRunException e) {
+            return extractErrorResult(request, e, session);
+        } catch (Exception e) {
+            throw new RuntimeException("Could not extract result...", e);
+        }
+    };
 
+    // translate framework results to AWS results
+    abstract protected Object extractResult(Message request, PipeLineResult result, PipeLineSession session) throws Exception;
+
+    // translate framework errors to AWS errors
+    abstract protected Object extractErrorResult(Message request, PipeRunException e, PipeLineSession session);
 }

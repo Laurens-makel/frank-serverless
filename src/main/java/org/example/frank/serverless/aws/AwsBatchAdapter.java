@@ -32,24 +32,6 @@ public abstract class AwsBatchAdapter<REQ,REP,MSG,MSGREP> extends AwsBaseAdapter
         return getBatchResult(batchSession);
     }
 
-    // generic way of calling a pipeline and translating it to AWS specific objects
-    protected MSGREP handleMessage(Message request, PipeLineSession session) {
-        try {
-            PipeLineResult result = process(session.getMessageId(), request, session);
-            return extractResult(request, result, session);
-        } catch (PipeRunException e) {
-            return extractErrorResult(request, e, session);
-        } catch (Exception e) {
-            throw new RuntimeException("Could not extract result...", e);
-        }
-    };
-
-    // translate framework results to AWS results
-    abstract protected MSGREP extractResult(Message request, PipeLineResult result, PipeLineSession session) throws Exception;
-
-    // translate framework errors to AWS errors
-    abstract protected MSGREP extractErrorResult(Message request, PipeRunException e, PipeLineSession session);
-
     // prepare batch session
     abstract protected void populateBatchSession(PipeLineSession batchSession);
 
