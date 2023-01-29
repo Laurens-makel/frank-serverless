@@ -16,11 +16,11 @@ public abstract class AwsAdapter<REQ,REP> extends AwsBaseAdapter<REQ,REP> {
     @Override
     public REP handleRequest(REQ request, Context context) {
         PipeLineSession session = createPipelineSession(context);
-        Message message = asMessage(request, session);
+        Message message = createMessageAndPopulateSession(request, session);
 
         return (REP) handleMessage(message, session);
     }
 
-    abstract protected Message asMessage(REQ event, PipeLineSession session);
+    abstract protected Message createMessageAndPopulateSession(REQ request, PipeLineSession session);
 
 }

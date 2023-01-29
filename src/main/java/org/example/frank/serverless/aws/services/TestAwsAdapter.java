@@ -18,7 +18,7 @@ public class TestAwsAdapter extends AwsAdapter<String, String> {
     }
 
     @Override
-    protected Message asMessage(String event, PipeLineSession session) {
+    protected Message createMessageAndPopulateSession(String event, PipeLineSession session) {
         return new Message(event);
     }
 

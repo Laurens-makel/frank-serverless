@@ -35,12 +35,8 @@ public abstract class SqsAdapter extends AwsBatchAdapter<SQSEvent, SQSBatchRespo
     }
 
     @Override
-    protected void populateBatchItemSession(Context context, PipeLineSession session, SQSEvent.SQSMessage message) {
-        session.put(PipeLineSession.messageIdKey, message.getMessageId());
-    }
-
-    @Override
-    protected Message asMessage(SQSEvent.SQSMessage batchItem, PipeLineSession session) {
+    protected Message createMessageAndPopulateBatchItemSession(Context context, SQSEvent.SQSMessage batchItem, PipeLineSession session) {
+        session.put(PipeLineSession.messageIdKey, batchItem.getMessageId());
         return new Message(batchItem.getBody());
     }
 

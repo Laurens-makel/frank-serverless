@@ -20,12 +20,11 @@ public abstract class AwsBatchAdapter<REQ,REP,MSG,MSGREP> extends AwsBaseAdapter
         PipeLineSession batchSession = createPipelineSession(context);
         populateBatchSession(batchSession);
 
-        for(MSG request : asIterable(batch)){
+        for(MSG batchItem : asIterable(batch)){
             PipeLineSession session = createPipelineSession(context);
             session.put(BATCH_SESSION_KEY, batchSession);
-            populateBatchItemSession(context, session, request);
 
-            Message message = asMessage(request, session);
+            Message message = createMessageAndPopulateBatchItemSession(context, batchItem, session);
             handleMessage(message, session);
         }
 
@@ -39,10 +38,8 @@ public abstract class AwsBatchAdapter<REQ,REP,MSG,MSGREP> extends AwsBaseAdapter
     abstract protected Iterable<MSG> asIterable(REQ batch);
 
     // prepare batch item session, for each item in batch
-    abstract protected void populateBatchItemSession(Context context, PipeLineSession session, MSG batchItem);
-
     // transform raw batch item msg to Message class
-    abstract protected Message asMessage(MSG batchItem, PipeLineSession session);
+    abstract protected Message createMessageAndPopulateBatchItemSession(Context context, MSG batchItem, PipeLineSession session);
 
     // read batch results from essions
     abstract protected REP getBatchResult(PipeLineSession batchSession);

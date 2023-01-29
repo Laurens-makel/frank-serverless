@@ -37,7 +37,8 @@ public abstract class ApiGatewayAdapter extends AwsAdapter<APIGatewayProxyReques
         return (APIGatewayProxyResponseEvent) request.getContext().get(PipeLineSession.HTTP_RESPONSE_KEY);
     }
 
-    protected Message asMessage(APIGatewayProxyRequestEvent event, PipeLineSession session){
+    @Override
+    protected Message createMessageAndPopulateSession(APIGatewayProxyRequestEvent event, PipeLineSession session){
         Message request = new Message(event.getBody());
         APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
 

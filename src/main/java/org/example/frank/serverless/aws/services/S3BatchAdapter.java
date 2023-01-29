@@ -31,15 +31,12 @@ public abstract class S3BatchAdapter extends AwsBatchAdapter<S3BatchEvent, S3Bat
     }
 
     @Override
-    protected void populateBatchItemSession(Context context, PipeLineSession session, S3BatchEvent.Task batchItem) {
+    protected Message createMessageAndPopulateBatchItemSession(Context context, S3BatchEvent.Task batchItem, PipeLineSession session) {
         session.put(TASK_ID_KEY,   batchItem.getTaskId());
         session.put("s3BucketArn", batchItem.getS3BucketArn());
         session.put("s3Key",       batchItem.getS3Key());
         session.put("s3VersionId", batchItem.getS3VersionId());
-    }
 
-    @Override
-    protected Message asMessage(S3BatchEvent.Task batchItem, PipeLineSession session) {
         XmlBuilder task = new XmlBuilder("task");
         task.addSubElement("taskId",      batchItem.getTaskId());
         task.addSubElement("s3BucketArn", batchItem.getS3BucketArn());
