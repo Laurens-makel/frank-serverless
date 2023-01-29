@@ -21,20 +21,20 @@ public abstract class ApiGatewayAdapter extends AwsAdapter<APIGatewayProxyReques
 
     @Override
     protected APIGatewayProxyResponseEvent extractResult(Message request, PipeLineResult result, PipeLineSession session) throws Exception {
-        APIGatewayProxyResponseEvent response = (APIGatewayProxyResponseEvent) request.getContext().get(PipeLineSession.HTTP_RESPONSE_KEY);
-
-        return response
+        return response(request)
                 .withStatusCode(result.getExitCode())
                 .withBody(result.getResult().asString());
     }
 
     @Override
     protected APIGatewayProxyResponseEvent extractErrorResult(Message request, PipeRunException e, PipeLineSession session) {
-        APIGatewayProxyResponseEvent response = (APIGatewayProxyResponseEvent) request.getContext().get(PipeLineSession.HTTP_RESPONSE_KEY);
-
-        return response
+        return response(request)
                 .withStatusCode(500)
                 .withBody(e.getMessage());
+    }
+
+    private APIGatewayProxyResponseEvent response(Message request){
+        return (APIGatewayProxyResponseEvent) request.getContext().get(PipeLineSession.HTTP_RESPONSE_KEY);
     }
 
     protected Message asMessage(APIGatewayProxyRequestEvent event, PipeLineSession session){
