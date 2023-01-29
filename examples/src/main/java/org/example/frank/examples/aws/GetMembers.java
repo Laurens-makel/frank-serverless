@@ -7,7 +7,6 @@ import org.example.frank.examples.adapters.SubAdapter;
 import org.example.frank.examples.adapters.pipes.LoadMembersPipe;
 import org.example.frank.examples.adapters.pipes.ServerlessAdapterSenderPipe;
 import org.example.frank.serverless.aws.services.ApiGatewayAdapter;
-import org.example.frank.serverless.aws.services.SqsAdapter;
 
 public class GetMembers extends ApiGatewayAdapter {
     private SubAdapter subAdapter = new SubAdapter("SubAdapter");
@@ -18,8 +17,14 @@ public class GetMembers extends ApiGatewayAdapter {
 
     @Override
     protected void createPipeline(PipeLine pipeLine) throws ConfigurationException {
-        pipeLine.addPipe(new LoadMembersPipe("Load members","/files/xml/members.xml"));
-        pipeLine.addPipe(new ServerlessAdapterSenderPipe("Send members", "SubAdapter"));
+        try {
+            SubAdapter subAdapter = new SubAdapter("SubAdapter");
+
+            pipeLine.addPipe(new LoadMembersPipe("Load members", "/files/xml/members.xml"));
+            pipeLine.addPipe(new ServerlessAdapterSenderPipe("Send members", subAdapter));
+        } catch (Exception e){
+            throw new ConfigurationException(e);
+        }
     }
 
 }

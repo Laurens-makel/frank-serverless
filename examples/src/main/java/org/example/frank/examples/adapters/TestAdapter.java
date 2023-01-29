@@ -9,16 +9,20 @@ import org.example.frank.serverless.ServerlessAdapter;
 
 public class TestAdapter extends ServerlessAdapter {
 
-    private SubAdapter subAdapter = new SubAdapter("SubAdapter");
-
     public TestAdapter(String name) throws ConfigurationException, PipeStartException {
         super(name);
     }
 
     @Override
     protected void createPipeline(PipeLine pipeLine) throws ConfigurationException {
-        pipeLine.addPipe(new LoadMembersPipe("Load members","/files/xml/members.xml"));
-        pipeLine.addPipe(new ServerlessAdapterSenderPipe("Send members", "SubAdapter"));
+        try {
+            SubAdapter subAdapter = new SubAdapter("SubAdapter");
+
+            pipeLine.addPipe(new LoadMembersPipe("Load members", "/files/xml/members.xml"));
+            pipeLine.addPipe(new ServerlessAdapterSenderPipe("Send members", subAdapter));
+        } catch (Exception e){
+            throw new ConfigurationException(e);
+        }
     }
 
 }
