@@ -1,0 +1,11 @@
+<APIGatewayAdapter>
+    <Pipeline>
+        <SenderPipe name="Select members">
+            <FixedQuerySender query="SELECT * FROM MEMBERS" />
+        </SenderPipe>
+        <XsltPipe name="Transform members"
+                  styleSheetName="files/xsl/TransformMembers.xsl" />
+        <Json2XmlValidatorPipe name="Translate to JSON"
+                               outputFormat="JSON" schema="files/xsd/members.xsd" throwException="true" />
+    </Pipeline>
+</APIGatewayAdapter>

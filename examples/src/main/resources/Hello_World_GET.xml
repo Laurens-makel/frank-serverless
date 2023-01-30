@@ -1,0 +1,5 @@
+<APIGatewayAdapter>
+    <Pipeline>
+        <EchoPipe name="Hello" getInputFromFixedResult="Hello World!" />
+    </Pipeline>
+</APIGatewayAdapter>
