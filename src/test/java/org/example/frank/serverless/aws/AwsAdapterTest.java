@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,14 +35,22 @@ public abstract class AwsAdapterTest<REQ,REP> {
         // given
         AwsAdapter<REQ,REP> adapter = getAdapter();
 
-        REQ req = objectMapper.readValue(new File("src/test/resources/"+eventSource), persistentClassRequest);
-        Context mockedContext = Mockito.mock(Context.class);
+        REQ request = request();
+        Context mockedContext = context();
 
         // when
-        REP reply = adapter.handleRequest(req, mockedContext);
+        REP reply = adapter.handleRequest(request, mockedContext);
 
         // then
-        assertEquals(getRequestBody(req), getReplyBody(reply));
+        assertEquals(getRequestBody(request), getReplyBody(reply));
+    }
+
+    protected REQ request() throws IOException {
+        return objectMapper.readValue(new File("src/test/resources/"+eventSource), persistentClassRequest);
+    }
+
+    protected Context context(){
+        return Mockito.mock(Context.class);
     }
 
     abstract protected AwsAdapter<REQ,REP> getAdapter() throws ConfigurationException, PipeStartException;
