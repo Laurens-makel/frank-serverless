@@ -12,12 +12,12 @@ import org.example.frank.serverless.ServerlessAdapter;
 
 // REQ = AWS Specific request class, REP = AWS Specific reply class
 public abstract class AwsBaseAdapter<REQ,REP> extends ServerlessAdapter implements RequestHandler<REQ,REP> {
-    public final String LAMBDA_CLIENT_CONTEXT_KEY       = "LambdaClientContext";
-    public final String LAMBDA_FUNCTION_NAME_KEY        = "LambdaFunctionName";
-    public final String LAMBDA_FUNCTION_VERSION_KEY     = "LambdaFunctionVersion";
-    public final String LAMBDA_IDENTITY_KEY             = "LambdaIdentity";
-    public final String LAMBDA_INVOKED_FUNCTION_ARN_KEY = "LambdaInvokedFunctionARN";
-    public final String LAMBDA_LOGGER_KEY               = "LambdaLogger";
+    public final static String LAMBDA_CLIENT_CONTEXT_KEY       = "LambdaClientContext";
+    public final static String LAMBDA_FUNCTION_NAME_KEY        = "LambdaFunctionName";
+    public final static String LAMBDA_FUNCTION_VERSION_KEY     = "LambdaFunctionVersion";
+    public final static String LAMBDA_IDENTITY_KEY             = "LambdaIdentity";
+    public final static String LAMBDA_INVOKED_FUNCTION_ARN_KEY = "LambdaInvokedFunctionARN";
+    public final static String LAMBDA_LOGGER_KEY               = "LambdaLogger";
 
     public AwsBaseAdapter(String name) throws ConfigurationException, PipeStartException {
         super(name);
