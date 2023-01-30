@@ -10,12 +10,12 @@ import org.example.frank.serverless.aws.services.TestAwsAdapter;
 import java.io.IOException;
 
 public class App {
-    private static TestAwsAdapter adapter;
+    private static TestAdapter adapter;
 
     public static void main(String[] args) throws ConfigurationException, IOException, PipeRunException, PipeStartException {
         long start = System.currentTimeMillis();
 
-        adapter = new TestAwsAdapter();
+        adapter = new TestAdapter("hey");
         finish(start, "Time Elapsed Before Startup:");
 
         sendMessage(new Message("Hello world 1"));
@@ -29,7 +29,7 @@ public class App {
 
         PipeLineSession session = new PipeLineSession();
         session.put("name", "John Doe");
-        String result = adapter.handleRequest("echo",null);
+        String result = adapter.process("123",request, session).getResult().asString();
         System.out.println("Result: " + result);
         finish(start, "Time Elapsed for single message:");
     }

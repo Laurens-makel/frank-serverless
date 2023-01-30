@@ -13,7 +13,7 @@ public class CreateMembersFromSQS extends SqsAdapter {
 
     @Override
     protected void createPipeline(PipeLine pipeLine) throws ConfigurationException {
-
+        // Create pipeline here
     }
 
 }

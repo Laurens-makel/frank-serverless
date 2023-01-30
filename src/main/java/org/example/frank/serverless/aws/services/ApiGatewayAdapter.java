@@ -51,19 +51,25 @@ public abstract class ApiGatewayAdapter extends AwsAdapter<APIGatewayProxyReques
             session.put(header.getKey(), header.getValue());
         }
 
-        for (Map.Entry<String, String> parameter : event.getPathParameters().entrySet()) {
-            messageContext.put("PathParameters."+parameter.getKey(), parameter.getValue());
-            session.put(parameter.getKey(), parameter.getValue());
+        if(event.getPathParameters() != null && !event.getPathParameters().isEmpty()){
+            for (Map.Entry<String, String> parameter : event.getPathParameters().entrySet()) {
+                messageContext.put("PathParameters."+parameter.getKey(), parameter.getValue());
+                session.put(parameter.getKey(), parameter.getValue());
+            }
         }
 
-        for (Map.Entry<String, String> parameter : event.getQueryStringParameters().entrySet()) {
-            messageContext.put("QueryStringParameters."+parameter.getKey(), parameter.getValue());
-            session.put(parameter.getKey(), parameter.getValue());
+        if(event.getQueryStringParameters() != null && !event.getQueryStringParameters().isEmpty()){
+            for (Map.Entry<String, String> parameter : event.getQueryStringParameters().entrySet()) {
+                messageContext.put("QueryStringParameters."+parameter.getKey(), parameter.getValue());
+                session.put(parameter.getKey(), parameter.getValue());
+            }
         }
 
-        for (Map.Entry<String, String> stageVariable : event.getStageVariables().entrySet()) {
-            messageContext.put("StageVariables."+stageVariable.getKey(), stageVariable.getValue());
-            session.put(stageVariable.getKey(), stageVariable.getValue());
+        if(event.getStageVariables() != null && !event.getStageVariables().isEmpty()){
+            for (Map.Entry<String, String> stageVariable : event.getStageVariables().entrySet()) {
+                messageContext.put("StageVariables."+stageVariable.getKey(), stageVariable.getValue());
+                session.put(stageVariable.getKey(), stageVariable.getValue());
+            }
         }
 
         return request;
