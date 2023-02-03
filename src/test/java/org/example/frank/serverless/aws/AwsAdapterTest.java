@@ -4,7 +4,9 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.nn.adapterframework.configuration.ConfigurationException;
+import nl.nn.adapterframework.core.PipeLine;
 import nl.nn.adapterframework.core.PipeStartException;
+import nl.nn.adapterframework.pipes.FixedResultPipe;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -33,7 +35,7 @@ public abstract class AwsAdapterTest<REQ,REP> {
     @Test
     public void testEchoPipe() throws Exception {
         // given
-        AwsAdapter<REQ,REP> adapter = getAdapter();
+        IAwsTestAdapter<REQ,REP> adapter = getAdapter();
 
         REQ request = request();
         Context mockedContext = context();
@@ -45,6 +47,28 @@ public abstract class AwsAdapterTest<REQ,REP> {
         assertEquals(getRequestBody(request), getReplyBody(reply));
     }
 
+    @Test
+    public void testFixedResult() throws Exception {
+        // given
+        IAwsTestAdapter<REQ,REP> adapter = getAdapter();
+
+        PipeLine pipeLine = new PipeLine();
+        FixedResultPipe fixedResultPipe = new FixedResultPipe();
+        fixedResultPipe.setName("FXR");
+        fixedResultPipe.setFilename("files/xml/dummy.xml");
+        pipeLine.addPipe(fixedResultPipe);
+        adapter.setPipeline(pipeLine);
+
+        REQ request = request();
+        Context mockedContext = context();
+
+        // when
+        REP reply = adapter.handleRequest(request, mockedContext);
+
+        // then
+        assertEquals("<dummy/>", getReplyBody(reply));
+    }
+
     protected REQ request() throws IOException {
         return objectMapper.readValue(new File("src/test/resources/"+eventSource), persistentClassRequest);
     }
@@ -53,7 +77,7 @@ public abstract class AwsAdapterTest<REQ,REP> {
         return Mockito.mock(Context.class);
     }
 
-    abstract protected AwsAdapter<REQ,REP> getAdapter() throws ConfigurationException, PipeStartException;
+    abstract protected IAwsTestAdapter<REQ,REP> getAdapter() throws ConfigurationException, PipeStartException;
     abstract protected String getRequestBody(REQ request);
     abstract protected String getReplyBody(REP reply);
 }

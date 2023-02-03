@@ -6,8 +6,10 @@ import nl.nn.adapterframework.configuration.ConfigurationException;
 import nl.nn.adapterframework.core.PipeLine;
 import nl.nn.adapterframework.core.PipeStartException;
 import nl.nn.adapterframework.pipes.EchoPipe;
+import org.example.frank.serverless.ITestAdapter;
 import org.example.frank.serverless.aws.AwsAdapter;
 import org.example.frank.serverless.aws.AwsAdapterTest;
+import org.example.frank.serverless.aws.IAwsTestAdapter;
 
 public class ApiGatewayAdapterTest extends AwsAdapterTest<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
@@ -16,7 +18,7 @@ public class ApiGatewayAdapterTest extends AwsAdapterTest<APIGatewayProxyRequest
     }
 
     @Override
-    protected AwsAdapter<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> getAdapter() throws ConfigurationException, PipeStartException {
+    protected IAwsTestAdapter<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> getAdapter() throws ConfigurationException, PipeStartException {
         return new EchoApiGatewayAdapter();
     }
 
@@ -30,10 +32,15 @@ public class ApiGatewayAdapterTest extends AwsAdapterTest<APIGatewayProxyRequest
         return reply.getBody();
     }
 
-    class EchoApiGatewayAdapter extends ApiGatewayAdapter {
+    class EchoApiGatewayAdapter extends ApiGatewayAdapter implements IAwsTestAdapter<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
         public EchoApiGatewayAdapter() throws ConfigurationException, PipeStartException {
             super("Test Serverless Adapter");
+        }
+
+        public void setPipeline(PipeLine pipeLine) throws ConfigurationException, PipeStartException {
+            this.pipeLine = pipeLine;
+            create(getName());
         }
 
         @Override

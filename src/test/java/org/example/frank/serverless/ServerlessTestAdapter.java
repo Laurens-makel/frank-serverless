@@ -6,7 +6,7 @@ import nl.nn.adapterframework.core.PipeStartException;
 import nl.nn.adapterframework.pipes.EchoPipe;
 import org.example.frank.serverless.ServerlessAdapter;
 
-public class ServerlessTestAdapter extends ServerlessAdapter {
+public class ServerlessTestAdapter extends ServerlessAdapter implements ITestAdapter{
 
     public ServerlessTestAdapter() throws ConfigurationException, PipeStartException {
         super("Test Adapter");
