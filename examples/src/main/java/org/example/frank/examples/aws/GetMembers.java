@@ -16,15 +16,11 @@ public class GetMembers extends ApiGatewayAdapter {
     }
 
     @Override
-    protected void createPipeline(PipeLine pipeLine) throws ConfigurationException {
-        try {
-            SubAdapter subAdapter = new SubAdapter("SubAdapter");
+    protected void createPipeline(PipeLine pipeLine) throws ConfigurationException, PipeStartException {
+        SubAdapter subAdapter = new SubAdapter("SubAdapter");
 
-            pipeLine.addPipe(new LoadMembersPipe("Load members", "/files/xml/members.xml"));
-            pipeLine.addPipe(new ServerlessAdapterSenderPipe("Send members", subAdapter));
-        } catch (Exception e){
-            throw new ConfigurationException(e);
-        }
+        pipeLine.addPipe(new LoadMembersPipe("Load members", "/files/xml/members.xml"));
+        pipeLine.addPipe(new ServerlessAdapterSenderPipe("Send members", subAdapter));
     }
 
 }
