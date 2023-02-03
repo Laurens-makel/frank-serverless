@@ -67,6 +67,7 @@ public abstract class ServerlessAdapter implements INamedObject {
 
     // Main entry point
     public PipeLineResult process(String messageId, Message message, PipeLineSession pipeLineSession) throws PipeRunException {
+        pipeLineSession.put("originalMessage", message);
         return pipeLine.process(messageId, message, pipeLineSession);
     }
 
