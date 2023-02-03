@@ -11,13 +11,13 @@ import nl.nn.adapterframework.stream.Message;
 
 public abstract class ServerlessAdapter implements INamedObject {
     private @Getter @Setter String name;
-    private final PipeLine pipeLine = new PipeLine();
+    protected PipeLine pipeLine = new PipeLine();
 
     public ServerlessAdapter(String name) throws ConfigurationException, PipeStartException {
         create(name);
     }
 
-    private void create(String name) throws ConfigurationException, PipeStartException {
+    protected void create(String name) throws ConfigurationException, PipeStartException {
         this.name = name;
         pipeLine.setOwner(this);
 
@@ -32,10 +32,10 @@ public abstract class ServerlessAdapter implements INamedObject {
     }
 
     // Build pipeline to your functional requirements
-    abstract protected void createPipeline(PipeLine pipeLine) throws ConfigurationException;
+    abstract protected void createPipeline(PipeLine pipeLine) throws ConfigurationException, PipeStartException;
 
     // Core processors
-    private void setProcessor(){
+    protected void setProcessor(){
         CorePipeLineProcessor processor = new CorePipeLineProcessor();
         processor.setPipeProcessor(new CorePipeProcessor());
         pipeLine.setPipeLineProcessor(processor);
